@@ -34,24 +34,25 @@ export default function SuscripcionScreen() {
 
     function calcularSeguro() {
 
-        let seguroBase = 70
-        let descuentoPorHijo = 0
-        let descuentoPorEdad = 0
+        let seguroBase = 70;
+        let descuentoPorHijo = 0;
+        let descuentoPorEdad = 0;
 
-
-        if (numerosHijos > 1) {
-            descuentoPorHijo = numerosHijos * 7
+        if (numerosHijos >= 1) {
+            descuentoPorHijo = numerosHijos * 7;
         } else {
-            descuentoPorHijo = 0
+            descuentoPorHijo = 0;
         }
 
         if (edad < 20) {
-            descuentoPorEdad = seguroBase / 2
+            descuentoPorEdad = seguroBase / 2;
         } else {
-            descuentoPorEdad = 0
+            descuentoPorEdad = 0;
         }
 
-        const seguroFinal = seguroBase - (descuentoPorEdad + descuentoPorHijo)
+        // 3. Restar los descuentos del valor base
+        const seguroFinal = seguroBase - (descuentoPorEdad + descuentoPorHijo);
+
 
         Alert.alert(
             "RESULTADO",
