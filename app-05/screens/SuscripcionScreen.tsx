@@ -2,18 +2,6 @@ import { Alert, Button, StyleSheet, Switch, Text, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { TextInput } from 'react-native-gesture-handler'
 
-/*
-CREA UN FORMULARIO QUE RECIBA NOMBRE, EDAD,(EL NUMERO HIJOS DE)
-SWITCH PREGUNTANDO SI TIENE
-    SI TIENE HIJOS APARECE UN CAMPO QUE PEDIRA LA CANTIDAD DE HIJOS
-
-SI ES MENOR DE 20 AÑOS, LA SUSCRIPCIÓN CUESTA LA MITAD
-SI TIENE HIJOS SE APLICA UN DESCUENTO DE $7 USD POR CADA HIJO
-
-EL VALOR DE LA SUSCRIPCION DEL SEGURO ES DE $70 USD
-CALCULAR EL VALOR DEL SEGURO
-*/
-
 export default function SuscripcionScreen() {
     const [ocultar, setocultar] = useState(false)
     const [nombre, setnombre] = useState("")
@@ -50,104 +38,149 @@ export default function SuscripcionScreen() {
             descuentoPorEdad = 0;
         }
 
-        // 3. Restar los descuentos del valor base
         const seguroFinal = seguroBase - (descuentoPorEdad + descuentoPorHijo);
 
 
         Alert.alert(
             "RESULTADO",
-            "Nombre: " + nombre + "\nSu seguro es de: " + seguroFinal.toFixed(2)
+            nombre + "\nSu seguro es de: " + seguroFinal.toFixed(2)
         )
     }
 
 
     return (
         <View style={styles.container}>
+
             <View style={styles.txtContainer}>
                 <Text style={styles.titulo}>FORMULARIO</Text>
             </View>
 
+            <Text style={styles.label}>Nombre:</Text>
             <TextInput
-                placeholder='Nombre'
+                placeholder='Escriba su nombre'
                 style={styles.input}
                 onChangeText={setnombre}
                 value={nombre}
                 placeholderTextColor="#cecece"
             />
 
+            <Text style={styles.label}>Edad:</Text>
             <TextInput
-                placeholder='Edad'
+                placeholder='Escriba su edad'
                 onChangeText={(texto) => setedad(+texto)}
-                value={edad.toString()}
+                value={edad === 0 ? "" : edad.toString()}
                 keyboardType='numeric'
                 placeholderTextColor="#cecece"
                 style={styles.input}
             />
 
-            <View style={{ flex: 1 }}>
-                <Text style={{ color: "#ffffff" }}>Usted tiene hijos?      </Text>
-
-                <View style={{ alignContent: 'center' }}>
-
-                    <Switch
-                        value={ocultar}
-                        onChange={() => setocultar(!ocultar)}
-                    />
-                    {
-                        ocultar == true
-                            ? <TextInput
-                                placeholder='N° hijos'
-                                placeholderTextColor="#cecece"
-                                keyboardType='numeric'
-                                onChangeText={(texto) => setnumerosHijos(+texto)}
-                                value={numerosHijos.toString()}
-                                style={styles.input} />
-                            : <Text>NO</Text>
-                    }
-                </View>
-                <Button
-                    title='Calcular'
-                    color={"#ffa600"}
-                    onPress={calcularSeguro} />
+            <View style={styles.switchRow}>
+                <Text style={styles.switchText}>¿Usted tiene hijos?</Text>
+                <Switch
+                    value={ocultar}
+                    onValueChange={() => setocultar(!ocultar)}
+                />
             </View>
+
+            {
+                ocultar ? (
+                    <View style={styles.hijosContainer}>
+                        <Text style={styles.labelCentrado}>Cantidad de hijos:</Text>
+                        <TextInput
+                            placeholder='N° hijos'
+                            placeholderTextColor="#cecece"
+                            keyboardType='numeric'
+                            onChangeText={(texto) => setnumerosHijos(+texto)}
+                            value={numerosHijos === 0 ? "" : numerosHijos.toString()}
+                            style={styles.input}
+                        />
+                    </View>
+                ) : (
+                    <Text style={styles.textoNo}>Sin hijos registrados</Text>
+                )
+            }
+
+            <View style={styles.btnContainer}>
+                <Button
+                    title='Calcular Seguro'
+                    color={"#ffa600"}
+                    onPress={calcularSeguro}
+                />
+            </View>
+
         </View>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
-        justifyContent: 'center',
-        backgroundColor: '#757575',
         flex: 1,
-        alignItems: 'center'
+        backgroundColor: '#757575',
+        alignItems: 'center',
+        paddingTop: 60,
+    },
+    txtContainer: {
+        marginBottom: 30,
+    },
+    titulo: {
+        color: '#ffffff',
+        fontSize: 35,
+        fontWeight: 'bold',
+    },
+    label: {
+        color: '#ffffff',
+        fontSize: 16,
+        fontWeight: 'bold',
+        width: '80%',
+        marginBottom: 5,
+        marginTop: 15,
+    },
+    labelCentrado: {
+        color: '#ffffff',
+        fontSize: 16,
+        fontWeight: 'bold',
+        marginBottom: 5,
     },
     input: {
         backgroundColor: "#4e4e4e",
         fontWeight: "bold",
-        fontSize: 20,
+        fontSize: 18,
         width: "80%",
-        height: 70,
-        margin: 5,
+        height: 60,
         borderColor: "#ffffff",
         borderWidth: 2,
         borderRadius: 15,
         paddingHorizontal: 15,
         color: "#ffffff",
     },
-    txtContainer: {
-        flex: 1,
+    switchRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: 25,
+        marginBottom: 10,
+        width: '80%',
     },
-    textinput: {
-        width: "80%",
-        height: 100,
-        backgroundColor: "#4e4e4e",
-        borderColor: "#ffffff",
-        borderWidth: 2,
-        borderRadius: 15,
+    switchText: {
+        color: "#ffffff",
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginRight: 15,
     },
-    titulo: {
-        color: '#ffffff',
-        fontSize: 35,
-        fontWeight: 'bold'
+    hijosContainer: {
+        width: '100%',
+        alignItems: 'center',
+        marginTop: 10,
+    },
+    textoNo: {
+        color: "#cecece",
+        fontSize: 16,
+        marginTop: 15,
+        marginBottom: 15,
+    },
+    btnContainer: {
+        marginTop: 40,
+        width: '80%',
+        borderRadius: 10,
     }
 })
